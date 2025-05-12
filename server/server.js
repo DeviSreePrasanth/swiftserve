@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv');
 
 const authRoutes = require('./routes/authRoute');
 const serviceRoutes = require('./routes/serviceRoute');
@@ -13,15 +12,17 @@ const detailRoute = require('./routes/detailRoute');
 const reviewRoutes = require('./routes/reviewRoute');
 const fullRoute = require('./routes/fullRoute');
 const db = require('./config/connectDB');
+
 const app = express();
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:5173'];
+
+// Static configuration
+const ALLOWED_ORIGINS = ['http://localhost:5173', 'https://swiftserve-cags.vercel.app/'];
+const PORT = 5000;
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
@@ -32,10 +33,13 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
-dotenv.config();
+
+// Connect to MongoDB
 db();
 
+// Routes
 app.use('/auth', authRoutes);
 app.use('/service', serviceRoutes);
 app.use('/search', searchRoute);
@@ -46,6 +50,6 @@ app.use('/bookings', bookingRoute);
 app.use('/detail', detailRoute);
 app.use('/vendor-service', fullRoute);
 
-app.listen(process.env.PORT, () => {
-    console.log("Server is running on port " + process.env.PORT);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
