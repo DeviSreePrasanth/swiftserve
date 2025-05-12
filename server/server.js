@@ -14,27 +14,24 @@ const reviewRoutes = require('./routes/reviewRoute');
 const fullRoute = require('./routes/fullRoute');
 const db = require('./config/connectDB');
 const app = express();
-const allowedOrigins = [
-  'https://swiftserve-4v01.onrender.com', // Production frontend
-  'http://localhost:5173', // Development frontend
-];
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173'];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (e.g., mobile apps or curl)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
       }
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   })
 );
-
 app.use(express.json());
 dotenv.config();
 db();
