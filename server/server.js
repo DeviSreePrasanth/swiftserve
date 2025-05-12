@@ -15,21 +15,11 @@ const fullRoute = require('./routes/fullRoute');
 const db = require('./config/connectDB');
 const app = express();
 
-// CORS middleware
-app.use(cors({
-  origin: ['http://localhost:5173', 'https://swiftserve-4v01.onrender.com'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', '*'], // Allow all headers
-  credentials: true,
-}));
-
-app.options('*', cors()); // Handle OPTIONS requests for all routes
-
+app.use(cors());
 app.use(express.json());
 dotenv.config();
 db();
 
-// Routes
 app.use('/auth', authRoutes);
 app.use('/service', serviceRoutes);
 app.use('/search', searchRoute);
@@ -40,7 +30,6 @@ app.use('/bookings', bookingRoute);
 app.use('/detail', detailRoute);
 app.use('/vendor-service', fullRoute);
 
-// Start server
 app.listen(process.env.PORT, () => {
     console.log("Server is running on port " + process.env.PORT);
 });
