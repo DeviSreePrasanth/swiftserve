@@ -97,7 +97,7 @@ function ServicesPage() {
               </div>
               <div className="text-center mt-8">
                 <Link
-                  to="/"
+                  to="/home"
                   className="inline-block px-6 py-2 rounded-lg font-medium bg-gray-700 hover:bg-gray-600 text-white transition-colors"
                 >
                   Back to Home
